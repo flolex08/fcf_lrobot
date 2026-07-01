@@ -1,34 +1,48 @@
 import { useState, useEffect } from 'react'
 
-const COLORS = ['#22d3ee', '#f97316', '#a78bfa', '#34d399', '#fb7185', '#fbbf24']
+const FCR = '#E0291A'
+const FCR_DARK = '#b81f10'
 
-function RankingBar({ name, votes, maxVotes, rank, color }) {
+const COLORS = [FCR, '#c0392b', '#e74c3c', '#ff6b6b']
+
+function RankingBar({ name, votes, maxVotes, totalVotes, rank, color }) {
   const pct = maxVotes > 0 ? (votes / maxVotes) * 100 : 0
+  const isFirst = rank === 1
+
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 20, fontWeight: 700 }}>
+    <div style={{
+      background: isFirst ? 'rgba(224,41,26,0.08)' : 'rgba(255,255,255,0.03)',
+      border: `1px solid ${isFirst ? 'rgba(224,41,26,0.4)' : 'rgba(255,255,255,0.08)'}`,
+      borderRadius: 12,
+      padding: '20px 24px',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{
-            background: rank === 1 ? '#fbbf24' : '#334155',
-            color: rank === 1 ? '#0f172a' : '#94a3b8',
-            borderRadius: 6, width: 32, height: 32,
+            background: isFirst ? FCR : 'rgba(255,255,255,0.1)',
+            color: '#fff',
+            borderRadius: 8,
+            width: 36, height: 36,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 14, fontWeight: 800
-          }}>#{rank}</span>
-          {name}
+            fontSize: 15, fontWeight: 800, flexShrink: 0
+          }}>
+            {isFirst ? '🏆' : `#${rank}`}
+          </span>
+          <span style={{ fontSize: 22, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{name}</span>
         </span>
-        <span style={{ fontSize: 20, fontWeight: 800, color }}>
-          {votes} {votes === 1 ? 'Stimme' : 'Stimmen'}
+        <span style={{ fontSize: 18, fontWeight: 700, color: isFirst ? FCR : '#ccc' }}>
+          {votes} {votes === 1 ? 'Stimme' : 'Stimmen'} · {totalVotes > 0 ? Math.round((votes / totalVotes) * 100) : 0}%
         </span>
       </div>
-      <div style={{ background: '#1e293b', borderRadius: 8, height: 18, overflow: 'hidden' }}>
+      <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 6, height: 10, overflow: 'hidden' }}>
         <div style={{
           width: `${pct}%`,
           height: '100%',
           background: color,
-          borderRadius: 8,
-          transition: 'width 0.8s ease',
-          minWidth: votes > 0 ? 8 : 0
+          borderRadius: 6,
+          transition: 'width 1s ease',
+          minWidth: votes > 0 ? 10 : 0
         }} />
       </div>
     </div>
@@ -63,52 +77,102 @@ export default function App() {
   const totalVotes = ranking.reduce((s, r) => s + r.votes, 0)
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto', padding: '48px 24px' }}>
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 48 }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>🤖</div>
-        <h1 style={{ fontSize: 28, fontWeight: 900, marginBottom: 8, letterSpacing: -0.5 }}>
-          Wie soll unser Linienroboter heißen?
-        </h1>
-        <p style={{ color: '#64748b', fontSize: 15 }}>
-          Überweise per PayPal · Nenne deinen Favoriten im Verwendungszweck · 2€ = 1 Stimme
-        </p>
-      </div>
+    <div style={{ minHeight: '100vh', background: '#0f0f0f', color: '#fff', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
-      {/* Total */}
+      {/* Hero */}
       <div style={{
-        background: '#1e293b', borderRadius: 12, padding: '16px 24px',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: 32
+        position: 'relative',
+        height: 340,
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}>
-        <span style={{ color: '#94a3b8', fontSize: 14 }}>Gesamte Stimmen</span>
-        <span style={{ fontWeight: 800, fontSize: 24 }}>{totalVotes}</span>
+        <img
+          src="/hero.png"
+          alt="FC Finsing Linienroboter"
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
+        />
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(15,15,15,0.85) 100%)'
+        }} />
+        <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px' }}>
+          <img src="/logo.png" alt="FC Finsing Logo" style={{ width: 90, height: 90, objectFit: 'contain', marginBottom: 12, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }} />
+          <h1 style={{ fontSize: 28, fontWeight: 900, margin: '0 0 6px', textShadow: '0 2px 8px rgba(0,0,0,0.6)', letterSpacing: -0.5 }}>
+            Wie soll unser Linienroboter heißen?
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, margin: 0 }}>
+            FC Finsing e.V. · Stimme jetzt per PayPal ab · 2€ = 1 Stimme
+          </p>
+        </div>
       </div>
 
-      {/* Ranking */}
-      <div style={{ background: '#1e293b', borderRadius: 16, padding: 28 }}>
-        {loading ? (
-          <p style={{ textAlign: 'center', color: '#64748b' }}>Lade Ranking…</p>
-        ) : ranking.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#64748b' }}>Noch keine Stimmen – sei der Erste!</p>
-        ) : (
-          ranking.map((item, i) => (
-            <RankingBar
-              key={item.name}
-              name={item.name}
-              votes={item.votes}
-              maxVotes={maxVotes}
-              rank={i + 1}
-              color={COLORS[i % COLORS.length]}
-            />
-          ))
-        )}
-      </div>
+      {/* Content */}
+      <div style={{ maxWidth: 600, margin: '0 auto', padding: '32px 20px 48px' }}>
 
-      {/* Footer */}
-      <div style={{ textAlign: 'center', marginTop: 24, color: '#475569', fontSize: 12 }}>
-        {lastUpdate && <>Zuletzt aktualisiert: {lastUpdate.toLocaleTimeString('de-DE')} · </>}
-        Aktualisiert alle 10 Sekunden
+        {/* Mitmachen Box */}
+        <div style={{
+          background: FCR,
+          borderRadius: 14,
+          padding: '18px 24px',
+          marginBottom: 24,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 16,
+        }}>
+          <span style={{ fontSize: 32 }}>⚽</span>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 2 }}>So machst du mit</div>
+            <div style={{ fontSize: 13, opacity: 0.9 }}>
+              Überweise per PayPal · Schreibe den Namen im Verwendungszweck · Jede 2€ = 1 Stimme
+            </div>
+          </div>
+        </div>
+
+        {/* Gesamtstimmen */}
+        <div style={{
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 12,
+          padding: '14px 24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 20,
+        }}>
+          <span style={{ color: '#aaa', fontSize: 14 }}>Gesamte Stimmen</span>
+          <span style={{ fontWeight: 900, fontSize: 26, color: FCR }}>{totalVotes}</span>
+        </div>
+
+        {/* Ranking */}
+        <div>
+          {loading ? (
+            <p style={{ textAlign: 'center', color: '#666', padding: 40 }}>Lade Ranking…</p>
+          ) : ranking.length === 0 ? (
+            <p style={{ textAlign: 'center', color: '#666', padding: 40 }}>Noch keine Stimmen – sei der Erste!</p>
+          ) : (
+            ranking.map((item, i) => (
+              <RankingBar
+                key={item.name}
+                name={item.name}
+                votes={item.votes}
+                maxVotes={maxVotes}
+                totalVotes={totalVotes}
+                rank={i + 1}
+                color={COLORS[i % COLORS.length]}
+              />
+            ))
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ textAlign: 'center', marginTop: 32, color: '#444', fontSize: 12 }}>
+          {lastUpdate && <>Zuletzt aktualisiert: {lastUpdate.toLocaleTimeString('de-DE')} · </>}
+          Aktualisiert alle 10 Sekunden
+          <br />
+          <span style={{ color: '#333', marginTop: 8, display: 'block' }}>FC Finsing e.V. 1956</span>
+        </div>
       </div>
     </div>
   )
