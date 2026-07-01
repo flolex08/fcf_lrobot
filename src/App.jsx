@@ -113,20 +113,27 @@ export default function App() {
 
         {/* Mitmachen Box */}
         <div style={{
-          background: FCR,
+          background: 'rgba(255,255,255,0.04)',
+          border: `1px solid rgba(224,41,26,0.3)`,
           borderRadius: 14,
-          padding: '18px 24px',
+          padding: '20px 24px',
           marginBottom: 24,
           display: 'flex',
+          gap: 20,
           alignItems: 'center',
-          gap: 16,
         }}>
-          <span style={{ fontSize: 32 }}>⚽</span>
+          <img
+            src="/paypal_qr.jpeg"
+            alt="PayPal QR Code"
+            style={{ width: 110, height: 110, borderRadius: 10, objectFit: 'cover', flexShrink: 0, border: '3px solid white' }}
+          />
           <div>
-            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 2 }}>So machst du mit</div>
-            <div style={{ fontSize: 13, opacity: 0.9 }}>
-              Überweise per PayPal · Schreibe den Namen im Verwendungszweck · Jede 2€ = 1 Stimme
-            </div>
+            <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 6, color: FCR }}>⚽ So machst du mit</div>
+            <ol style={{ paddingLeft: 18, color: 'rgba(255,255,255,0.85)', fontSize: 13, lineHeight: 1.8 }}>
+              <li>QR Code scannen &amp; per PayPal überweisen</li>
+              <li>Namen im Verwendungszweck angeben</li>
+              <li>2€ = 1 Stimme</li>
+            </ol>
           </div>
         </div>
 
