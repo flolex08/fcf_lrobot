@@ -98,7 +98,6 @@ export default function App() {
           background: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(15,15,15,0.85) 100%)'
         }} />
         <div style={{ position: 'relative', textAlign: 'center', padding: '0 24px' }}>
-          <img src="/logo.png" alt="FC Finsing Logo" style={{ width: 90, height: 90, objectFit: 'contain', marginBottom: 12, filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))' }} />
           <h1 style={{ fontSize: 28, fontWeight: 900, margin: '0 0 6px', textShadow: '0 2px 8px rgba(0,0,0,0.6)', letterSpacing: -0.5 }}>
             Wie soll unser Linienroboter heißen?
           </h1>
@@ -125,7 +124,7 @@ export default function App() {
           <img
             src="/paypal_qr.jpeg"
             alt="PayPal QR Code"
-            style={{ width: 110, height: 110, borderRadius: 10, objectFit: 'cover', flexShrink: 0, border: '3px solid white' }}
+            style={{ width: 150, height: 150, borderRadius: 10, objectFit: 'cover', flexShrink: 0, border: '3px solid white' }}
           />
           <div>
             <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 6, color: FCR }}>⚽ So machst du mit</div>
@@ -135,21 +134,6 @@ export default function App() {
               <li>2€ = 1 Stimme</li>
             </ol>
           </div>
-        </div>
-
-        {/* Gesamtstimmen */}
-        <div style={{
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: 12,
-          padding: '14px 24px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 20,
-        }}>
-          <span style={{ color: '#aaa', fontSize: 14 }}>Gesamte Stimmen</span>
-          <span style={{ fontWeight: 900, fontSize: 26, color: FCR }}>{totalVotes}</span>
         </div>
 
         {/* Ranking */}
