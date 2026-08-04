@@ -1,12 +1,197 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Roboter-Naming Ranking</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roboter-Naming | FC Finsing</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0f0f; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; }
+
+    .hero {
+      position: relative;
+      height: 320px;
+      overflow: hidden;
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .hero img.bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.55);
+    }
+    .hero-content { position: relative; padding: 0 20px; }
+    .hero h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,0.7); }
+    .hero p { color: rgba(255,255,255,0.8); font-size: 14px; }
+
+    .container { max-width: 600px; margin: 0 auto; padding: 28px 16px 48px; }
+
+    .mitmachen {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(224,41,26,0.35);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: -webkit-box;
+      display: flex;
+      gap: 16px;
+      -webkit-box-align: center;
+      align-items: center;
+    }
+    .mitmachen img { width: 140px; height: 140px; border-radius: 8px; border: 3px solid #fff; flex-shrink: 0; }
+    .mitmachen h2 { color: #E0291A; font-size: 15px; margin-bottom: 8px; }
+    .mitmachen ol { padding-left: 18px; font-size: 13px; line-height: 1.9; color: rgba(255,255,255,0.85); }
+
+    .ranking-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .ranking-item.first {
+      background: rgba(224,41,26,0.08);
+      border-color: rgba(224,41,26,0.4);
+    }
+    .ranking-header {
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-pack: justify;
+      justify-content: space-between;
+      -webkit-box-align: center;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .rank-left { display: -webkit-box; display: flex; -webkit-box-align: center; align-items: center; gap: 10px; }
+    .rank-badge {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+    }
+    .rank-badge.first { background: #E0291A; font-size: 16px; }
+    .rank-name { font-size: 20px; font-weight: 800; }
+    .rank-votes { font-size: 16px; font-weight: 700; color: #aaa; }
+    .rank-votes.first { color: #E0291A; }
+    .bar-bg { background: rgba(255,255,255,0.08); border-radius: 6px; height: 10px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 6px; background: #E0291A; }
+
+    .footer { text-align: center; margin-top: 28px; color: #444; font-size: 12px; line-height: 2; }
+    .loading { text-align: center; color: #555; padding: 40px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <img class="bg" src="/hero.png" alt="FC Finsing Roboter">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Wie soll unser Linienroboter heißen?</h1>
+      <p>FC Finsing e.V. &middot; Stimme jetzt per PayPal ab &middot; 2&euro; = 1 Stimme</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="mitmachen">
+      <img src="/paypal_qr.jpeg" alt="PayPal QR Code">
+      <div>
+        <h2>&#9917; So machst du mit</h2>
+        <ol>
+          <li>QR Code scannen <strong>oder</strong> per PayPal an<br><strong style="color:#E0291A">fcfinsing@gmail.com</strong> überweisen</li>
+          <li>Namen im Verwendungszweck angeben</li>
+          <li>2&euro; = 1 Stimme</li>
+        </ol>
+      </div>
+    </div>
+
+    <div id="ranking">
+      <div class="loading">Lade Ranking...</div>
+    </div>
+
+    <div class="footer">
+      <span id="last-update"></span>
+      Aktualisiert alle 10 Sekunden<br>
+      FC Finsing e.V. 1956
+    </div>
+
+  </div>
+
+  <script>
+    var colors = ['#E0291A', '#c0392b', '#e74c3c', '#ff6b6b'];
+
+    function loadRanking() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/api/ranking', true);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          try {
+            var data = JSON.parse(xhr.responseText);
+            renderRanking(data);
+            var now = new Date();
+            document.getElementById('last-update').innerText =
+              'Zuletzt aktualisiert: ' + now.toLocaleTimeString('de-DE') + ' · ';
+          } catch(e) {}
+        }
+      };
+      xhr.send();
+    }
+
+    function renderRanking(data) {
+      var total = 0;
+      for (var i = 0; i < data.length; i++) total += data[i].votes;
+
+      var maxVotes = 1;
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].votes > maxVotes) maxVotes = data[i].votes;
+      }
+
+      var html = '';
+      for (var i = 0; i < data.length; i++) {
+        var item = data[i];
+        var pct = maxVotes > 0 ? Math.round((item.votes / maxVotes) * 100) : 0;
+        var votePct = total > 0 ? Math.round((item.votes / total) * 100) : 0;
+        var isFirst = i === 0;
+        var color = colors[i % colors.length];
+
+        html += '<div class="ranking-item' + (isFirst ? ' first' : '') + '">';
+        html += '<div class="ranking-header">';
+        html += '<div class="rank-left">';
+        html += '<div class="rank-badge' + (isFirst ? ' first' : '') + '">' + (isFirst ? '&#127942;' : '#' + (i+1)) + '</div>';
+        html += '<span class="rank-name">' + item.name + '</span>';
+        html += '</div>';
+        html += '<span class="rank-votes' + (isFirst ? ' first' : '') + '">' + item.votes + ' Stimmen &middot; ' + votePct + '%</span>';
+        html += '</div>';
+        html += '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + color + '"></div></div>';
+        html += '</div>';
+      }
+
+      if (html === '') html = '<div class="loading">Noch keine Stimmen – sei der Erste!</div>';
+      document.getElementById('ranking').innerHTML = html;
+    }
+
+    loadRanking();
+    setInterval(loadRanking, 10000);
+  </script>
+
+</body>
 </html>
